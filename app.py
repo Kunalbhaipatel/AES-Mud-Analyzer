@@ -7,11 +7,11 @@ from io import BytesIO
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Extraction patterns
+# Corrected extraction patterns
 extraction_map = {
-    'Well Name': r'Well Name and No\.\s*(.*?)\n',
-    'Rig Name': r'Rig Name and No\.\s*(.*?)\n',
-    'Contractor': r'HELMERICH & PAYNE, INC\.',
+    'Well Name': r'Well Name and No\.\s*(.*?)\s*Rig Name and No\.',
+    'Rig Name': r'Rig Name and No\.\s*(.*?)\s*State',
+    'Contractor': r'(HELMERICH & PAYNE, INC\.)',
     'Depth': r'Drilled Depth\s+(\d{3,5})',
     'Bit Size': r'Bit Data.*?Size.*?\n.*?(\d+\.\d+)',
     'Drilling Hrs': r'Hours\s+([\d.]+)',
@@ -26,7 +26,7 @@ extraction_map = {
     'SCE Loss': r'Left on Cuttings \(-\)\s+([\d.]+)',
     'In Pits': r'In Pits\s+([\d.]+)\s*bbl',
     'In Hole': r'In Hole\s+([\d.]+)\s*bbl',
-    'Formation Loss Flag': r'loss|gain|seepage',
+    'Formation Loss Flag': r'loss|gain|seepage'
 }
 
 def extract_pdf_data(pdf_file):
@@ -35,7 +35,7 @@ def extract_pdf_data(pdf_file):
     data = {}
     for field, pattern in extraction_map.items():
         match = re.search(pattern, text, re.IGNORECASE | re.DOTALL)
-        data[field] = match.group(1) if match and match.groups() else None
+        data[field] = match.group(1).strip() if match and match.groups() else None
     try:
         data['Total Circ (bbl)'] = round(float(data.get('In Pits', 0)) + float(data.get('In Hole', 0)), 2)
     except:
@@ -94,7 +94,7 @@ if uploaded_files:
     ax.legend()
     st.pyplot(fig)
 
-    # Screen wear
+    # Wear analysis
     DEFAULT_SCREEN_SIZE = 200
     DEFAULT_FLOWRATE = 1000
     df["Deck 1 Wear"] = df.apply(lambda x: calculate_screen_wear(DEFAULT_FLOWRATE, DEFAULT_SCREEN_SIZE, x["Drilling Hrs"]), axis=1)
