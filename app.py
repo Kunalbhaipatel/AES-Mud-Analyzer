@@ -35,7 +35,7 @@ def extract_pdf_data(pdf_file):
     data = {}
     for field, pattern in extraction_map.items():
         match = re.search(pattern, text, re.IGNORECASE | re.DOTALL)
-        data[field] = match.group(1) if match else None
+        data[field] = match.group(1) if match and match.groups() else None
     try:
         data['Total Circ (bbl)'] = round(float(data.get('In Pits', 0)) + float(data.get('In Hole', 0)), 2)
     except:
