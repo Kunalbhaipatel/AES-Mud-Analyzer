@@ -15,7 +15,7 @@ def extract_fields(file):
 
     data = {}
     data['Well Name'] = safe_search(r"Well Name and No\.\s*(.*?)\n", text)
-", text)
+
     data['Rig Name'] = safe_search(r"Rig Name and No\.\s*(.*?)
 ", text)
     data['Contractor'] = safe_search(r"(HELMERICH & PAYNE.*?)
