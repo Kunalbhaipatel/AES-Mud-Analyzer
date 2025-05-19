@@ -15,13 +15,10 @@ def extract_fields(file):
 
     data = {}
     data['Well Name'] = safe_search(r"Well Name and No\.\s*(.*?)\n", text)
-
-    data['Rig Name'] = safe_search(r"Rig Name and No\.\s*(.*?)\n", text)
-    data['Contractor'] = safe_search(r"(HELMERICH & PAYNE.*?)
-", text)
-    data['Depth'] = safe_search(r"Drilled Depth\s+([\d,]+)", text).replace(",", "")
-    data['Bit Size'] = safe_search(r"Bit Data.*?Size.*?
-.*?(\d+\.\d+)", text)
+data['Rig Name'] = safe_search(r"Rig Name and No\.\s*(.*?)\n", text)
+data['Contractor'] = safe_search(r"(HELMERICH & PAYNE.*?)\n", text)
+data['Depth'] = safe_search(r"Drilled Depth\s+([\d,]+)", text).replace(",", "")
+data['Bit Size'] = safe_search(r"Bit Data.*?Size.*?\n.*?(\d+\.\d+)", text)
     data['Drilling Hrs'] = safe_search(r"Hours\s+([\d.]+)", text)
 
     data['Mud Weight'] = safe_search(r"MUD WT\s+([\d.]+)", text)
