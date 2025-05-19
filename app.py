@@ -9,6 +9,9 @@ import numpy as np
 
 # Final extraction patterns matching header layout
 extraction_map = {
+    'Bit Depth': r'Bit Depth\s*=\s*(\d{4,5})\s*\'',
+    'Circulating Rate': r'Circulating Rate\s+(\d+)\s*gpm',
+    'Circulating Pressure': r'Circulating Pressure\s+([\d,]+)\s*psi',
     'Operator': r'Operator\s+([A-Z &\-]+)',
     'Well Name': r'Well Name and No\.\s+([A-Z0-9 \-]+)',
     'Rig Name': r'Rig Name and No\.\s+([A-Z0-9 \-]+)',
@@ -74,6 +77,13 @@ if uploaded_files:
         extracted_records.append(record)
 
     df = pd.DataFrame(extracted_records)
+
+    # Clean placeholder text values
+    df.replace({
+        'Operator': ['Contractor County'],
+        'Well Name': ['Rig Name and No'],
+        'Rig Name': ['State Spud Date Current ROP Activity']
+    }, value=None, inplace=True)
     st.success("✅ Extraction Complete!")
 
     st.subheader("📄 Extracted Report Data")
@@ -94,6 +104,26 @@ if uploaded_files:
     ax.set_title("Mud Weight vs SCE Loss")
     ax.legend()
     st.pyplot(fig)
+
+    
+    # Auto Summary
+    st.subheader("🧠 Auto-Generated Summary")
+    for _, row in df.iterrows():
+        summary_lines = []
+        if row.get("Bit Depth"):
+            summary_lines.append(f"🔩 Bit Depth: {row['Bit Depth']} ft")
+        if row.get("Circulating Rate"):
+            summary_lines.append(f"💧 Circulating Rate: {row['Circulating Rate']} GPM")
+        if row.get("Circulating Pressure"):
+            summary_lines.append(f"⚙️ Circulating Pressure: {row['Circulating Pressure']} psi")
+            try:
+                if int(row['Circulating Pressure'].replace(',', '')) > 3000:
+                    summary_lines.append("⚠️ High pump load detected")
+            except:
+                pass
+        if row.get("Bit Depth") and row.get("Depth") and row['Bit Depth'] != row['Depth']:
+            summary_lines.append("⚠️ Bit Depth and Drilled Depth mismatch")
+        st.markdown(f"**{row['Filename']}**\n" + "\n".join(f"- {line}" for line in summary_lines))
 
     # Screen wear
     DEFAULT_SCREEN_SIZE = 200
