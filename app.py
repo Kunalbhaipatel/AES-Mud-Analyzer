@@ -7,11 +7,11 @@ from io import BytesIO
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Structured and corrected extraction patterns
+# Final extraction patterns matching header layout
 extraction_map = {
-    'Operator': r'Operator\s*\n(.*?)\n',
-    'Well Name': r'Well Name and No\.\s*\n(.*?)\n',
-    'Rig Name': r'Rig Name and No\.\s*\n(.*?)\n',
+    'Operator': r'Operator\s+([A-Z &\-]+)',
+    'Well Name': r'Well Name and No\.\s+([A-Z0-9 \-]+)',
+    'Rig Name': r'Rig Name and No\.\s+([A-Z0-9 \-]+)',
     'Contractor': r'(HELMERICH & PAYNE, INC\.)',
     'Depth': r'Drilled Depth\s*[:]?[\s\n]*(\d{4,5})\s*ft',
     'Bit Size': r'Bit Data.*?Size.*?\n.*?(\d+\.\d+)',
@@ -32,7 +32,7 @@ extraction_map = {
 
 def extract_pdf_data(pdf_file):
     with pdfplumber.open(pdf_file) as pdf:
-        text = "\n".join(page.extract_text() for page in pdf.pages if page.extract_text())
+        text = "\n".join([page.extract_text() or "" for page in pdf.pages])
     data = {}
     for field, pattern in extraction_map.items():
         match = re.search(pattern, text, re.IGNORECASE | re.DOTALL)
