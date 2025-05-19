@@ -7,25 +7,26 @@ from io import BytesIO
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Corrected extraction patterns
+# Structured and corrected extraction patterns
 extraction_map = {
-    'Well Name': r'Well Name and No\.\s*(.*?)\s*Rig Name and No\.',
-    'Rig Name': r'Rig Name and No\.\s*(.*?)\s*State',
+    'Operator': r'Operator\s*\n(.*?)\n',
+    'Well Name': r'Well Name and No\.\s*\n(.*?)\n',
+    'Rig Name': r'Rig Name and No\.\s*\n(.*?)\n',
     'Contractor': r'(HELMERICH & PAYNE, INC\.)',
-    'Depth': r'Drilled Depth\s+(\d{3,5})',
+    'Depth': r'Drilled Depth\s*[:]?[\s\n]*(\d{4,5})\s*ft',
     'Bit Size': r'Bit Data.*?Size.*?\n.*?(\d+\.\d+)',
     'Drilling Hrs': r'Hours\s+([\d.]+)',
-    'Mud Weight': r'MUD WT\s+([\d.]+)',
-    'PV': r'Plastic Viscosity \(cp\).*?(\d+)',
-    'YP': r'Yield Point.*?(\d+)',
+    'Mud Weight': r'Mud Weight.*?(\d{2}\.\d)',
+    'PV': r'PV\s+([\d-]+)',
+    'YP': r'YP\s+([\d-]+)',
     'Avg Temp': r'Flowline Temperature\s*°F\s*(\d+)',
     'Base Oil': r'Oil Added \(\+\)\s+([\d.]+)',
     'Water': r'Water Added \(\+\)\s+([\d.]+)',
     'Barite': r'Barite Added \(\+\)\s+([\d.]+)',
     'Chemical': r'Other Product Usage \(\+\)\s+([\d.]+)',
     'SCE Loss': r'Left on Cuttings \(-\)\s+([\d.]+)',
-    'In Pits': r'In Pits\s+([\d.]+)\s*bbl',
-    'In Hole': r'In Hole\s+([\d.]+)\s*bbl',
+    'In Pits': r'In Pits\s+(\d+(\.\d+)?)\s*bbl',
+    'In Hole': r'In Hole\s+(\d+(\.\d+)?)\s*bbl',
     'Formation Loss Flag': r'loss|gain|seepage'
 }
 
@@ -94,7 +95,7 @@ if uploaded_files:
     ax.legend()
     st.pyplot(fig)
 
-    # Wear analysis
+    # Screen wear
     DEFAULT_SCREEN_SIZE = 200
     DEFAULT_FLOWRATE = 1000
     df["Deck 1 Wear"] = df.apply(lambda x: calculate_screen_wear(DEFAULT_FLOWRATE, DEFAULT_SCREEN_SIZE, x["Drilling Hrs"]), axis=1)
