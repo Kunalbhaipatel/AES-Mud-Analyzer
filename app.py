@@ -21,19 +21,19 @@ data['Depth'] = safe_search(r"Drilled Depth\s+([\d,]+)", text).replace(",", "")
 data['Bit Size'] = safe_search(r"Bit Data.*?Size.*?\n.*?(\d+\.\d+)", text)
     data['Drilling Hrs'] = safe_search(r"Hours\s+([\d.]+)", text)
 
-    data['Mud Weight'] = safe_search(r"MUD WT\s+([\d.]+)", text)
-    data['PV'] = safe_search(r"Plastic Viscosity\s*\(cp\)\s*([\d.]+)", text)
-    data['YP'] = safe_search(r"Yield Point.*?=\s*([\d.]+)", text)
-    data['Avg Temp'] = safe_search(r"Flowline Temperature\s*°F\s*([\d.]+)", text)
+data['Mud Weight'] = safe_search(r"MUD WT\s+([\d.]+)", text)
+data['PV'] = safe_search(r"Plastic Viscosity\s*\(cp\)\s*([\d.]+)", text)
+data['YP'] = safe_search(r"Yield Point.*?=\s*([\d.]+)", text)
+data['Avg Temp'] = safe_search(r"Flowline Temperature\s*°F\s*([\d.]+)", text)
 
-    data['Base Oil'] = safe_search(r"Oil Added\s*\(\+\)\s*([\d.]+)", text)
-    data['Water'] = safe_search(r"Water Added\s*\(\+\)\s*([\d.]+)", text)
-    data['Barite'] = safe_search(r"Barite Added\s*\(\+\)\s*([\d.]+)", text)
-    data['Chemical'] = safe_search(r"Other Product Usage\s*\(\+\)\s*([\d.]+)", text)
-    data['SCE Loss'] = safe_search(r"Left on Cuttings\s*\(-\)\s*([\d.]+)", text)
+data['Base Oil'] = safe_search(r"Oil Added\s*\(\+\)\s*([\d.]+)", text)
+data['Water'] = safe_search(r"Water Added\s*\(\+\)\s*([\d.]+)", text)
+data['Barite'] = safe_search(r"Barite Added\s*\(\+\)\s*([\d.]+)", text)
+data['Chemical'] = safe_search(r"Other Product Usage\s*\(\+\)\s*([\d.]+)", text)
+data['SCE Loss'] = safe_search(r"Left on Cuttings\s*\(-\)\s*([\d.]+)", text)
 
-    data['In Pits'] = safe_search(r"In Pits\s+([\d.]+)\s*bbl", text)
-    data['In Hole'] = safe_search(r"In Hole\s+([\d.]+)\s*bbl", text)
+data['In Pits'] = safe_search(r"In Pits\s+([\d.]+)\s*bbl", text)
+data['In Hole'] = safe_search(r"In Hole\s+([\d.]+)\s*bbl", text)
     return data
 
 def to_float(val):
