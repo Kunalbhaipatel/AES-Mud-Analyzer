@@ -1,4 +1,5 @@
 streamlit
-PyMuPDF
 pandas
-plotly
+matplotlib
+pdfplumber
+numpy
